@@ -1,0 +1,11 @@
+const row1 = [{'nameEn': '`', 'nameRu': 'ё', 'capsEn': '~', 'capsRu': 'Ё'}, {'nameEn': '1', 'capsEn': '!'}, {'nameEn': '2', 'capsEn': '@', 'capsRu': '"'}, {'nameEn': '3', 'capsEn': '#', 'capsRu': '№'}, {'nameEn': '4', 'capsEn': '$', 'capsRu': ';'}, {'nameEn': '5', 'capsEn': '%'}, {'nameEn': '6', 'capsEn': '^', 'capsRu': ':'}, {'nameEn': '7', 'capsEn': '&', 'capsRu': '?'}, {'nameEn': '8', 'capsEn': '*'}, {'nameEn': '9', 'capsEn': '(*)'}, {'nameEn': '0', 'capsEn': ')'}, {'nameEn': '-', 'capsEn': '_'}, {'nameEn': '=', 'capsEn': '+'}, {'nameEn': '⌫'}];
+
+const row2 = [{'nameEn': 'Tab'}, {'nameEn': 'q', 'nameRu': 'й'}, {'nameEn': 'w', 'nameRu': 'ц'}, {'nameEn': 'e', 'nameRu': 'у'}, {'nameEn': 'r', 'nameRu': 'к'}, {'nameEn': 't', 'nameRu': 'е'}, {'nameEn': 'y', 'nameRu': 'н'}, {'nameEn': 'u', 'nameRu': 'г'}, {'nameEn': 'i', 'nameRu': 'ш'}, {'nameEn': 'o', 'nameRu': 'щ'}, {'nameEn': 'p', 'nameRu': 'з'}, {'nameEn': '[', 'nameRu': 'х'}, {'nameEn': ']', 'nameRu': 'ъ'}, {'nameEn': '\\', 'capsEn': '|'}];
+
+const row3 = [{'nameEn': '⇪'}, {'nameEn': 'a', 'nameRu': 'ф'}, {'nameEn': 's', 'nameRu': 'ы'}, {'nameEn': 'd', 'nameRu': 'в'}, {'nameEn': 'f', 'nameRu': 'а'}, {'nameEn': 'g', 'nameRu': 'п'}, {'nameEn': 'h', 'nameRu': 'р'}, {'nameEn': 'j', 'nameRu': 'о'}, {'nameEn': 'k', 'nameRu': 'л'}, {'nameEn': 'l', 'nameRu': 'д'}, {'nameEn': ';', 'capsEn': ':', 'nameRu': 'ж'}, {'nameEn': '\'', 'capsEn': '"', 'nameRu': 'э'}, {'nameEn': 'Enter'}];
+
+const row4 = [{'nameEn': 'Shift'}, {'nameEn': 'z', 'nameRu': 'я'}, {'nameEn': 'x', 'nameRu': 'ч'}, {'nameEn': 'c', 'nameRu': 'с'}, {'nameEn': 'v', 'nameRu': 'м'}, {'nameEn': 'b', 'nameRu': 'и'}, {'nameEn': 'n', 'nameRu': 'т'}, {'nameEn': 'm', 'nameRu': 'ь'}, {'nameEn': ',', 'capsEn': '<', 'nameRu': 'б'}, {'nameEn': '.', 'capsEn': '>', 'nameRu': 'ю'}, {'nameEn': '/', 'capsEn': '?', 'nameRu': '.', 'capsRu': ','}, {'nameEn': '↑'}, {'nameEn': 'Shift'}];
+
+const row5 = [{'nameEn': 'Ctrl'}, {'nameEn': 'Fn'}, {'nameEn': '⊞'}, {'nameEn': 'Alt'}, {'nameEn': ' '}, {'nameEn': 'Alt'}, {'nameEn': 'Ctrl'}, {'nameEn': '←'}, {'nameEn': '↓'}, {'nameEn': '→'}];
+
+export {row1, row2, row3, row4, row5};
