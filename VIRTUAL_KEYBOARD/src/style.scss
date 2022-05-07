@@ -16,7 +16,7 @@ body {
     margin: 0;
 }
 
-h1, p {
+h1, p, span {
     font-family: $font;
     color: $color-primary;
     text-shadow: 2px 2px 2px $color-shadow;
@@ -26,7 +26,7 @@ h1 {
     margin-bottom: 50px;
 }
 
-p {
+p, span {
     margin: 5px;
 }
 
@@ -37,11 +37,14 @@ textarea {
     border: 2px solid $color-primary;
     border-radius: 10px;
     background: $color-background;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 20px;
 }
 
 textarea:focus {
     background: $color-focus;
-    box-shadow: 0px 0px 10px #7E75E4;
+    box-shadow: 0px 0px 10px $color-shadow;
 }
 
 .container {
@@ -74,8 +77,8 @@ textarea:focus {
     border-right: 3px outset $color-shadow;
     font-family: $font;
     font-size: 20px;
-    background: #222223;
-    color: #7E75E4;
+    background: $color-primary;
+    color: $color-shadow;
     border-radius: 10px;
     text-align: center;
     transition: 0.2s;
@@ -85,16 +88,26 @@ textarea:focus {
         &.space {
             flex-grow: 1;
         }
+        &.highlighted {
+            background: $color-shadow;
+            color: $color-primary;
+            border-bottom: 3px outset $color-primary;
+            border-right: 3px outset $color-primary;
+        }
         &:hover {
             cursor: pointer;
             box-shadow: 2px 2px 5px $color-shadow;
-            text-shadow: 1px 1px 2px $color-shadow;
+            // text-shadow: 1px 1px 2px $color-shadow;
             transform: scale(1.05);
+        }
+        &.highlighted:hover {
+            box-shadow: 2px 2px 5px $color-primary;
+            // text-shadow: 1px 1px 2px $color-primary;
         }
         &.space:hover {
             transform: scale(1.02);
         }
-        &:active {
+        &:active, &.active {
             transform: scale(0.95);
         }
         &.space:active {
