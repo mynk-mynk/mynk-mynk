@@ -1,12 +1,23 @@
 import './style.scss';
 import * as symbols from "./symbols";
 
-let [lang, caps] = ['EN', false];
+    let lang;
+    let caps = false;
 
 const allSymbols = [...symbols.row1, ...symbols.row2, ...symbols.row3, ...symbols.row4, ...symbols.row5];
 
 
 // Functions
+
+function setLocalStorage() {
+    let language = lang || 'EN';
+    localStorage.setItem('language', language);
+}
+
+function getLocalStorage() {
+    lang = localStorage.getItem('language');
+}
+
 
 function pageStart() {
     let page = document.createElement('div');
@@ -56,10 +67,23 @@ function createBtn(el) {
     let div = document.createElement('div');
     div.classList.add('keyboard-btn');
     div.setAttribute('id', el.code);
-    div.textContent = el[`name${lang}`];
+    div.textContent = el[`name${lang}`] ?  el[`name${lang}`] :  el.nameEN;
     return div;
 }
 
+function assignClassToChangeableBtns() {
+    const btns = document.querySelectorAll('.keyboard-btn');
+    const functional = ['Tab', 'CapsLock', 'ShiftLeft', 'ShiftRight', 'AltLeft', 'AltRight', 'Enter', 'ControlLeft', 'ControlRight', 'Backspace'];
+    const arrows = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+
+    for (let btn of btns) {
+        let id = btn.getAttribute('id') || '';
+
+        if (!functional.includes(id) && !arrows.includes(id)) {
+            btn.classList.add('has-value');
+        }
+    }
+}
 
 function assignBtnSize() {
     const btns = document.querySelectorAll('.keyboard-btn');
@@ -76,33 +100,6 @@ function assignBtnSize() {
 }
 
 
-// function assignBtnClasses() {
-//     const btns = document.querySelectorAll('.keyboard-btn');
-//     const functional = ['Tab', 'Shift', 'Alt', 'Enter', 'Ctrl', 'Fn'];
-
-//     for (let btn of btns) {
-//         if (functional.includes(btn.textContent)) {
-//             btn.classList.add(`${btn.textContent.toLowerCase()}`);
-
-//         } else if (btn.textContent === '⇪') {
-//             btn.classList.add('capsLock');
-
-//         } else if (btn.textContent === '⌫') {
-//             btn.classList.add('backSpace');
-
-//         } else if (btn.textContent === '⊞') {
-//             btn.classList.add('windows');
-
-//         } else if (['←', '↑', '↓', '→'].includes(btn.textContent)) {
-//             btn.classList.add(`arrow${btn.textContent}`);
-
-//         } else {
-//             btn.classList.add('has-value');
-//         }
-//     }
-// }
-
-
 function toggleBtn(event) {
     event.target.classList.toggle('highlighted');
 }
@@ -117,27 +114,33 @@ function deactivateBtn(event) {
 
 
 function onBtnClick(btn) {
-    const textArea = document.querySelector('textarea');
-    const enter = document.querySelector('.enter');
-    const backSpace = document.querySelector('.backSpace');
-    const tab = document.querySelector('.tab');
+    const enter = document.getElementById('Enter');
+    const backSpace = document.getElementById('Backspace');
+    const tab = document.getElementById('Tab');
 
     if (btn === enter) textArea.value += '\n';
     if (btn === backSpace) textArea.value = textArea.value.slice(0, -1);
-    if (btn === tab) textArea.value = '    ' + textArea.value;
+    if (btn === tab) textArea.value += '   ';
 
     if (btn.matches('.has-value')) textArea.value += btn.textContent;
 }
 
 
+function onKeyDown(event) {
+    if (['Tab', 'AltLeft', 'AltRight'].includes(event.code)) event.preventDefault();
+    if (event.code === 'Tab') textArea.value += '   ';
+}
+
+
 function toggleLanguage() {
     const butns = document.querySelectorAll('.has-value');
-
+    
     if (lang === 'EN') {
         butns.forEach(btn => {
             for (let item of allSymbols) {
-                if (btn.textContent === item.nameEN) {
+                if (btn.getAttribute('id') === item.code) {
                     btn.textContent = item.nameRU;
+                    if (caps) capitalise();
                     break;
                 }
             }
@@ -147,8 +150,9 @@ function toggleLanguage() {
     } else if (lang === 'RU') {
         butns.forEach(btn => {
             for (let item of allSymbols) {
-                if (btn.textContent === item.nameRU) {
+                if (btn.getAttribute('id') === item.code) {
                     btn.textContent = item.nameEN;
+                    if (caps) capitalise();
                     break;
                 }
             }
@@ -171,13 +175,12 @@ function toggleCaps() {
 
 
 function capitalise() {
-    const butns = document.querySelectorAll('.has-value');
-    butns.forEach(btn => {
+    const btns = document.querySelectorAll('.has-value');
+    btns.forEach(btn => {
 
         for (let item of allSymbols) {
-            const name = item[`name${lang}`] || '';
 
-            if (btn.textContent === name) {
+            if (btn.getAttribute('id') === item.code) {
 
                 if (item[`caps${lang}`]) {
                     btn.textContent = item[`caps${lang}`];
@@ -196,13 +199,11 @@ function deCapitalise() {
     butns.forEach(btn => {
 
         for (let item of allSymbols) {
-            const name = item[`name${lang}`] || '';
 
-            if (btn.textContent === item[`caps${lang}`] ||
-                btn.textContent === name.toUpperCase()) {
+            if (btn.getAttribute('id') === item.code) {
 
-                if (name) {
-                    btn.textContent = name;
+                if (item[`name${lang}`]) {
+                    btn.textContent = item[`name${lang}`];
 
                 } else {
                     btn.textContent = btn.textContent.toLowerCase();
@@ -214,38 +215,43 @@ function deCapitalise() {
 
 
 function pushVirtualBtn(event) {
-    let btn = getBtnWithId(event.code);
-    btn.classList.add('highlighted','active');
+    let btn = getBtnWithId(event.code) ?? '';
+    if (btn) btn.classList.add('highlighted', 'active');
 }
 
 function reliseVirtualBtn(event) {
-    let btn = getBtnWithId(event.code);
-    btn.classList.remove('highlighted','active');
+    let btn = getBtnWithId(event.code) ?? '';
+    if (btn) btn.classList.remove('highlighted', 'active');
 }
 
 
 function getBtnWithId(id) {
-    let btn = document.getElementById(`${id}`);
 
-    for (let item of allSymbols) {
-        if (btn.getAttribute('id') === item.code) return btn;
+    if (document.getElementById(`${id}`)) {
+        let btn = document.getElementById(`${id}`);
+        let btnId = btn.getAttribute('id');
+
+        for (let item of allSymbols) {
+            if (btnId === item.code) return btn;
+        }
     }
 }
 
 
 // Start
 
+getLocalStorage();
 pageStart();
 
 createKeyboard();
 assignBtnSize();
-// assignBtnClasses()
-
+assignClassToChangeableBtns();
 
 const capsLock = document.getElementById('CapsLock');
 const shiftL = document.getElementById('ShiftLeft');
 const shiftR = document.getElementById('ShiftRight');
 
+const textArea = document.querySelector('textarea');
 
 capsLock.addEventListener('click', toggleBtn);
 capsLock.addEventListener('click', toggleCaps);
@@ -258,16 +264,22 @@ capsLock.addEventListener('click', toggleCaps);
 
 
 const keyboard = document.querySelector('.keyboard-container');
-keyboard.addEventListener('click', (event) => onBtnClick(event.target))
+keyboard.addEventListener('click', (event) => onBtnClick(event.target));
 
 
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', () => textArea.focus());
+document.addEventListener('keydown', (event) => onKeyDown(event));
+
+
+document.addEventListener('keydown', function (event) {
     if (event.code == 'ShiftLeft' && event.ctrlKey ||
-    event.code == 'ShiftRight' && event.ctrlKey) {
+        event.code == 'ShiftRight' && event.ctrlKey) {
         toggleLanguage();
     }
-  });
+});
 
-  document.addEventListener('keydown', (event) => pushVirtualBtn(event));
-  document.addEventListener('keyup', (event) => reliseVirtualBtn(event));
 
+document.addEventListener('keydown', (event) => pushVirtualBtn(event));
+document.addEventListener('keyup', (event) => reliseVirtualBtn(event));
+
+window.addEventListener('beforeunload', setLocalStorage);
