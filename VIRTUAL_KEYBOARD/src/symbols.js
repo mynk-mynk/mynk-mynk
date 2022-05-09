@@ -68,7 +68,7 @@ const row5 = [
     {'nameEN': 'Ctrl', 'code': 'ControlLeft'}, 
     {'nameEN': '⊞', 'code': 'MetaLeft'}, 
     {'nameEN': 'Alt', 'code': 'AltLeft'}, 
-    {'nameEN': ' ', 'code': 'Space'}, 
+    {'nameEN': ' ', 'nameRU': ' ', 'code': 'Space'}, 
     {'nameEN': 'Alt', 'code': 'AltRight'}, 
     {'nameEN': 'Ctrl', 'code': 'ControlRight'}, 
     {'nameEN': '←', 'code': 'ArrowLeft'}, 
