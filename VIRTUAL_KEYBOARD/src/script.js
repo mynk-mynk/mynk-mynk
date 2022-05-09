@@ -1,10 +1,9 @@
 import './style.scss';
 import * as symbols from "./symbols";
 
-let lang = 'EN';
-let caps = false;
+let [lang, caps] = ['EN', false];
 
-const changeableSymbols = [...symbols.row1, ...symbols.row2, ...symbols.row3, ...symbols.row4];
+const allSymbols = [...symbols.row1, ...symbols.row2, ...symbols.row3, ...symbols.row4, ...symbols.row5];
 
 
 // Functions
@@ -32,7 +31,7 @@ function pageStart() {
     let os = document.createElement('p');
     let switchLang = document.createElement('p');
     os.textContent = 'Keyboard for Windows';
-    switchLang.textContent = 'To switch language: Shift + Alt';
+    switchLang.textContent = 'To switch language: Shift + Ctrl';
     page.append(os, switchLang);
 }
 
@@ -56,6 +55,7 @@ function createRow(arr) {
 function createBtn(el) {
     let div = document.createElement('div');
     div.classList.add('keyboard-btn');
+    div.setAttribute('id', el.code);
     div.textContent = el[`name${lang}`];
     return div;
 }
@@ -76,31 +76,31 @@ function assignBtnSize() {
 }
 
 
-function assignBtnClasses() {
-    const btns = document.querySelectorAll('.keyboard-btn');
-    const functional = ['Tab', 'Shift', 'Alt', 'Enter', 'Ctrl', 'Fn'];
+// function assignBtnClasses() {
+//     const btns = document.querySelectorAll('.keyboard-btn');
+//     const functional = ['Tab', 'Shift', 'Alt', 'Enter', 'Ctrl', 'Fn'];
 
-    for (let btn of btns) {
-        if (functional.includes(btn.textContent)) {
-            btn.classList.add(`${btn.textContent.toLowerCase()}`);
+//     for (let btn of btns) {
+//         if (functional.includes(btn.textContent)) {
+//             btn.classList.add(`${btn.textContent.toLowerCase()}`);
 
-        } else if (btn.textContent === '⇪') {
-            btn.classList.add('capsLock');
+//         } else if (btn.textContent === '⇪') {
+//             btn.classList.add('capsLock');
 
-        } else if (btn.textContent === '⌫') {
-            btn.classList.add('backSpace');
+//         } else if (btn.textContent === '⌫') {
+//             btn.classList.add('backSpace');
 
-        } else if (btn.textContent === '⊞') {
-            btn.classList.add('windows');
+//         } else if (btn.textContent === '⊞') {
+//             btn.classList.add('windows');
 
-        } else if (['←', '↑', '↓', '→'].includes(btn.textContent)) {
-            btn.classList.add(`arrow${btn.textContent}`);
+//         } else if (['←', '↑', '↓', '→'].includes(btn.textContent)) {
+//             btn.classList.add(`arrow${btn.textContent}`);
 
-        } else {
-            btn.classList.add('has-value');
-        }
-    }
-}
+//         } else {
+//             btn.classList.add('has-value');
+//         }
+//     }
+// }
 
 
 function toggleBtn(event) {
@@ -135,7 +135,7 @@ function toggleLanguage() {
 
     if (lang === 'EN') {
         butns.forEach(btn => {
-            for (let item of changeableSymbols) {
+            for (let item of allSymbols) {
                 if (btn.textContent === item.nameEN) {
                     btn.textContent = item.nameRU;
                     break;
@@ -146,9 +146,8 @@ function toggleLanguage() {
 
     } else if (lang === 'RU') {
         butns.forEach(btn => {
-            for (let item of changeableSymbols) {
+            for (let item of allSymbols) {
                 if (btn.textContent === item.nameRU) {
-                    // item == btn
                     btn.textContent = item.nameEN;
                     break;
                 }
@@ -175,7 +174,7 @@ function capitalise() {
     const butns = document.querySelectorAll('.has-value');
     butns.forEach(btn => {
 
-        for (let item of changeableSymbols) {
+        for (let item of allSymbols) {
             const name = item[`name${lang}`] || '';
 
             if (btn.textContent === name) {
@@ -196,7 +195,7 @@ function deCapitalise() {
     const butns = document.querySelectorAll('.has-value');
     butns.forEach(btn => {
 
-        for (let item of changeableSymbols) {
+        for (let item of allSymbols) {
             const name = item[`name${lang}`] || '';
 
             if (btn.textContent === item[`caps${lang}`] ||
@@ -214,35 +213,61 @@ function deCapitalise() {
 }
 
 
+function pushVirtualBtn(event) {
+    let btn = getBtnWithId(event.code);
+    btn.classList.add('highlighted','active');
+}
+
+function reliseVirtualBtn(event) {
+    let btn = getBtnWithId(event.code);
+    btn.classList.remove('highlighted','active');
+}
+
+
+function getBtnWithId(id) {
+    let btn = document.getElementById(`${id}`);
+
+    for (let item of allSymbols) {
+        if (btn.getAttribute('id') === item.code) return btn;
+    }
+}
+
+
 // Start
 
 pageStart();
 
 createKeyboard();
 assignBtnSize();
-assignBtnClasses()
+// assignBtnClasses()
 
 
-const capsLock = document.querySelector('.capsLock');
-const shift = document.querySelectorAll('.shift');
+const capsLock = document.getElementById('CapsLock');
+const shiftL = document.getElementById('ShiftLeft');
+const shiftR = document.getElementById('ShiftRight');
 
 
 capsLock.addEventListener('click', toggleBtn);
 capsLock.addEventListener('click', toggleCaps);
 
-shift.forEach(el => el.addEventListener('mousedown', activateBtn));
-shift.forEach(el => el.addEventListener('mouseup', deactivateBtn));
-shift.forEach(el => el.addEventListener('mousedown', capitalise));
-shift.forEach(el => el.addEventListener('mouseup', deCapitalise));
+
+[shiftL, shiftR].forEach((el) => el.addEventListener('mousedown', activateBtn));
+[shiftL, shiftR].forEach((el) => el.addEventListener('mousedown', capitalise));
+[shiftL, shiftR].forEach((el) => el.addEventListener('mouseup', deactivateBtn));
+[shiftL, shiftR].forEach((el) => el.addEventListener('mouseup', deCapitalise));
+
 
 const keyboard = document.querySelector('.keyboard-container');
 keyboard.addEventListener('click', (event) => onBtnClick(event.target))
 
 
-// for testing toggleLanguage
-const space = document.querySelector('.space');
-space.addEventListener('click', toggleLanguage);
-// to be deleted (change to Alt + Shift)
+document.addEventListener('keydown', function(event) {
+    if (event.code == 'ShiftLeft' && event.ctrlKey ||
+    event.code == 'ShiftRight' && event.ctrlKey) {
+        toggleLanguage();
+    }
+  });
 
-
+  document.addEventListener('keydown', (event) => pushVirtualBtn(event));
+  document.addEventListener('keyup', (event) => reliseVirtualBtn(event));
 
