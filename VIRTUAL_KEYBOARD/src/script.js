@@ -74,12 +74,12 @@ function createBtn(el) {
 function assignClassToChangeableBtns() {
     const btns = document.querySelectorAll('.keyboard-btn');
     const functional = ['Tab', 'CapsLock', 'ShiftLeft', 'ShiftRight', 'AltLeft', 'AltRight', 'Enter', 'ControlLeft', 'ControlRight', 'Backspace'];
-    const arrows = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+    // const arrows = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 
     for (let btn of btns) {
         let id = btn.getAttribute('id') || '';
 
-        if (!functional.includes(id) && !arrows.includes(id)) {
+        if (!functional.includes(id)) {
             btn.classList.add('has-value');
         }
     }
