@@ -1,8 +1,8 @@
 import './style.scss';
 import * as symbols from "./symbols";
 
-    let lang;
-    let caps = false;
+let lang;
+let caps = false;
 
 const allSymbols = [...symbols.row1, ...symbols.row2, ...symbols.row3, ...symbols.row4, ...symbols.row5];
 
@@ -67,19 +67,19 @@ function createBtn(el) {
     let div = document.createElement('div');
     div.classList.add('keyboard-btn');
     div.setAttribute('id', el.code);
-    div.textContent = el[`name${lang}`] ?  el[`name${lang}`] :  el.nameEN;
+    div.textContent = el[`name${lang}`] ? el[`name${lang}`] : el.nameEN;
     return div;
 }
 
 function assignClassToChangeableBtns() {
     const btns = document.querySelectorAll('.keyboard-btn');
     const functional = ['Tab', 'CapsLock', 'ShiftLeft', 'ShiftRight', 'AltLeft', 'AltRight', 'Enter', 'ControlLeft', 'ControlRight', 'Backspace'];
-    // const arrows = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+    const arrows = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 
     for (let btn of btns) {
         let id = btn.getAttribute('id') || '';
 
-        if (!functional.includes(id)) {
+        if (!functional.includes(id) && !arrows.includes(id)) {
             btn.classList.add('has-value');
         }
     }
@@ -100,9 +100,6 @@ function assignBtnSize() {
 }
 
 
-function toggleBtn(event) {
-    event.target.classList.toggle('highlighted');
-}
 
 function activateBtn(event) {
     event.target.classList.add('highlighted');
@@ -117,24 +114,34 @@ function onBtnClick(btn) {
     const enter = document.getElementById('Enter');
     const backSpace = document.getElementById('Backspace');
     const tab = document.getElementById('Tab');
+    const arrows = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 
     if (btn === enter) textArea.value += '\n';
     if (btn === backSpace) textArea.value = textArea.value.slice(0, -1);
     if (btn === tab) textArea.value += '   ';
 
     if (btn.matches('.has-value')) textArea.value += btn.textContent;
+    if (arrows.includes(btn.getAttribute('id'))) textArea.value += btn.textContent;
 }
 
 
 function onKeyDown(event) {
-    if (['Tab', 'AltLeft', 'AltRight'].includes(event.code)) event.preventDefault();
-    if (event.code === 'Tab') textArea.value += '   ';
+    if (['Tab', 'AltLeft', 'AltRight'].includes(event.code)) {
+        event.preventDefault();
+
+    } else if (event.code === 'Tab') {
+        textArea.value += '   ';
+
+    } else {
+        let btn = getBtnWithId(event.code);
+        if (btn) onBtnClick(btn);
+    }
 }
 
 
 function toggleLanguage() {
     const butns = document.querySelectorAll('.has-value');
-    
+
     if (lang === 'EN') {
         butns.forEach(btn => {
             for (let item of allSymbols) {
@@ -164,12 +171,15 @@ function toggleLanguage() {
 
 function toggleCaps() {
     caps = !caps;
+    const capsLock = document.getElementById('CapsLock');
 
     if (caps) {
         capitalise();
+        capsLock.classList.add('highlighted');
 
     } else {
         deCapitalise();
+        capsLock.classList.remove('highlighted');
     }
 }
 
@@ -221,7 +231,12 @@ function pushVirtualBtn(event) {
 
 function reliseVirtualBtn(event) {
     let btn = getBtnWithId(event.code) ?? '';
-    if (btn) btn.classList.remove('highlighted', 'active');
+    if (btn && btn.getAttribute('id') !== 'CapsLock') {
+        btn.classList.remove('highlighted', 'active');
+    
+    } else if (btn.getAttribute('id') === 'CapsLock') {
+        if (!caps) btn.classList.remove('highlighted', 'active'); 
+    }
 }
 
 
@@ -236,6 +251,7 @@ function getBtnWithId(id) {
         }
     }
 }
+
 
 
 // Start
@@ -253,7 +269,6 @@ const shiftR = document.getElementById('ShiftRight');
 
 const textArea = document.querySelector('textarea');
 
-capsLock.addEventListener('click', toggleBtn);
 capsLock.addEventListener('click', toggleCaps);
 
 
@@ -267,8 +282,12 @@ const keyboard = document.querySelector('.keyboard-container');
 keyboard.addEventListener('click', (event) => onBtnClick(event.target));
 
 
-document.addEventListener('keydown', () => textArea.focus());
 document.addEventListener('keydown', (event) => onKeyDown(event));
+document.addEventListener('keydown', (event) => {
+    if (event.code === 'CapsLock') {
+        toggleCaps();
+    }
+});
 
 
 document.addEventListener('keydown', function (event) {
