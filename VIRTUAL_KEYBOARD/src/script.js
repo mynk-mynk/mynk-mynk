@@ -28,11 +28,16 @@ function pageStart() {
     header.textContent = 'Virtual keyboard';
     page.append(header);
 
+    let clearBtn = document.createElement('span');
+    clearBtn.classList.add('clear-btn');
+    clearBtn.textContent = 'clear';
+    page.append(clearBtn);
+
     let textArea = document.createElement('textarea');
     textArea.name = 'textarea';
     textArea.id = 'textarea';
     textArea.rows = '10';
-    textArea.autofocus = true;
+    // textArea.autofocus = true;
     page.append(textArea);
 
     let keyboard = document.createElement('div');
@@ -126,16 +131,20 @@ function onBtnClick(btn) {
 
 
 function onKeyDown(event) {
-    if (['Tab', 'AltLeft', 'AltRight'].includes(event.code)) {
-        event.preventDefault();
+    // if (['Tab', 'AltLeft', 'AltRight'].includes(event.code)) {
+    event.preventDefault();
 
-    } else if (event.code === 'Tab') {
+    if (event.code === 'Tab') {
         textArea.value += '   ';
 
     } else {
         let btn = getBtnWithId(event.code);
         if (btn) onBtnClick(btn);
     }
+}
+
+function clearTextarea() {
+    textArea.value = '';
 }
 
 
@@ -231,11 +240,16 @@ function pushVirtualBtn(event) {
 
 function reliseVirtualBtn(event) {
     let btn = getBtnWithId(event.code) ?? '';
-    if (btn && btn.getAttribute('id') !== 'CapsLock') {
-        btn.classList.remove('highlighted', 'active');
-    
-    } else if (btn.getAttribute('id') === 'CapsLock') {
-        if (!caps) btn.classList.remove('highlighted', 'active'); 
+
+    if (btn) {
+        let id = btn.getAttribute('id');
+
+        if (id !== 'CapsLock') {
+            btn.classList.remove('highlighted', 'active');
+
+        } else if (id && id === 'CapsLock') {
+            if (!caps) btn.classList.remove('highlighted', 'active');
+        }
     }
 }
 
@@ -268,6 +282,11 @@ const shiftL = document.getElementById('ShiftLeft');
 const shiftR = document.getElementById('ShiftRight');
 
 const textArea = document.querySelector('textarea');
+
+const clearing = document.querySelector('.clear-btn');
+
+
+clearing.addEventListener('click', clearTextarea);
 
 capsLock.addEventListener('click', toggleCaps);
 
