@@ -37,7 +37,6 @@ function pageStart() {
     textArea.name = 'textarea';
     textArea.id = 'textarea';
     textArea.rows = '10';
-    // textArea.autofocus = true;
     page.append(textArea);
 
     let keyboard = document.createElement('div');
@@ -131,7 +130,7 @@ function onBtnClick(btn) {
 
 
 function onKeyDown(event) {
-    // if (['Tab', 'AltLeft', 'AltRight'].includes(event.code)) {
+    
     event.preventDefault();
 
     if (event.code === 'Tab') {
