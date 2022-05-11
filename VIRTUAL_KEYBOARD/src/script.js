@@ -47,7 +47,7 @@ function pageStart() {
     let os = document.createElement('p');
     let switchLang = document.createElement('p');
     os.textContent = 'Keyboard for Windows';
-    switchLang.textContent = 'To switch language: Shift + Ctrl';
+    switchLang.textContent = 'To switch language: Ctrl + Shift';
     page.append(os, switchLang);
 }
 
