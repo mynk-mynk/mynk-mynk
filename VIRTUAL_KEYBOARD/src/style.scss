@@ -1,0 +1,134 @@
+@font-face {
+    font-family: Roboto, Verdana, sans-serif;
+    src: url(../assets/fonts/Roboto-Regular.ttf);
+}
+
+$font: Roboto, Verdana, sans-serif;
+
+$color-primary: #222223;
+$color-shadow: #7E75E4;
+$color-background: #E0E0E1;
+$color-focus: white;
+
+
+@mixin btn-look {
+    -webkit-user-select: none;
+    box-sizing: border-box;
+    border-bottom: 3px outset $color-shadow;
+    border-right: 3px outset $color-shadow;
+    font-family: $font;
+    background: $color-primary;
+    color: $color-shadow;
+    border-radius: 10px;
+    text-align: center;
+    transition: 0.2s;
+}
+
+
+body {
+    background: $color-background;
+    margin: 0;
+}
+
+h1, p, span {
+    font-family: $font;
+    color: $color-primary;
+}
+
+h1 {
+    @include btn-look();
+    margin-bottom: 50px;
+    padding: 10px 20px;
+    box-shadow: 2px 2px 5px $color-shadow;
+}
+
+p, span {
+    text-shadow: 2px 2px 2px $color-shadow;
+    margin: 5px;
+}
+
+textarea {
+    width: 835px;
+    resize: none;
+    border: 2px solid $color-primary;
+    border-radius: 10px;
+    background: $color-background;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 20px;
+}
+
+textarea:focus {
+    background: $color-focus;
+    box-shadow: 0px 0px 10px $color-shadow;
+}
+
+.clear-btn {
+    align-self: flex-end;
+    cursor: pointer;
+    &:hover {
+        transform: scale(1.05);
+    }
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+.container {
+    width: 835px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+}
+
+.keyboard-container {
+    width: 835px;
+    margin: 50px 0;
+}
+
+.keyboard-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
+.keyboard-btn {
+    @include btn-look();
+    width: 55px;
+    height: 55px;
+    padding: 15px 0;
+    margin: 0 2px;
+    font-size: 20px;
+        &.long {
+            min-width: 90px;
+        }
+        &.space {
+            flex-grow: 1;
+        }
+        &.highlighted {
+            background: $color-shadow;
+            color: $color-primary;
+            border-bottom: 3px outset $color-primary;
+            border-right: 3px outset $color-primary;
+        }
+        &:hover, &.hover {
+            cursor: pointer;
+            box-shadow: 2px 2px 5px $color-shadow;
+            transform: scale(1.05);
+        }
+        &.highlighted:hover {
+            box-shadow: 2px 2px 5px $color-primary;
+        }
+        &.space:hover {
+            transform: scale(1.02);
+        }
+        &:active, &.active {
+            transform: scale(0.95);
+        }
+        &.space:active {
+            transform: scale(0.98);
+        }
+
+}
